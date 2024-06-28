@@ -1,0 +1,524 @@
+import os
+import colorama
+from colorama import Fore
+
+#FUNCIONES
+
+def limpiarPantalla():
+    os.system('cls' if os.name == 'nt' else 'clear')
+    return
+
+def mostrarMenuInicio():
+    limpiarPantalla()
+    print(Fore.BLUE + "Bienvenido a la aplicacion".center(60)) 
+    print()
+    print(Fore.LIGHTYELLOW_EX +"*" * 60) 
+    print()
+    input(Fore.BLUE + "Ingrese Enter para continuar...".center(60)) 
+    print(Fore.RESET)
+    return
+
+def menuInicio():
+    '''
+    Funcion menu, presenta un menu de opciones para el usuario
+    Parametros: no espera
+    Returno: retornara la opcion elegida por el usuario
+    '''
+    limpiarPantalla()
+    print(Fore.BLUE + "AGENTES MMSD".center(60))
+    print (Fore.LIGHTYELLOW_EX + "*" * 60)
+    print()
+    print(Fore.BLUE + "Opcion 1:" + Fore.RESET + "Buscar agente")
+    print(Fore.BLUE + "Opcion 2:" + Fore.RESET + "Agregar agente")
+    print(Fore.BLUE + "Opcion 3:"  + Fore.RESET + "Modificar agente")
+    print(Fore.BLUE + "Opcion 4:"  + Fore.RESET + "Eliminar agente")
+    print(Fore.BLUE + "Opcion 5:"  + Fore.RESET + "Lista de agentes registrados")
+    print(Fore.BLUE + "Opcion 6:"  + Fore.RESET + "Salir de la aplicación")
+    print()
+    print (Fore.LIGHTYELLOW_EX + "*" * 60)
+    print()
+
+    while True:
+        op = None
+        try:
+            op = int(input(Fore.RESET + "Ingrese alguna de las opciones: " + Fore.BLUE))
+            print(Fore.RESET)
+            return op
+        except ValueError:
+            limpiarPantalla()
+            print(Fore.RED + "ERROR 404. NOT FOUND.")
+            input(Fore.MAGENTA + "Debe ingresar un número, no una letra ni un simbolo. Presione" + Fore.BLUE +  " Enter" + Fore.MAGENTA + " para continuar...")
+            limpiarPantalla()
+            print (Fore.LIGHTYELLOW_EX + "*" * 60)
+            print(Fore.BLUE + "Opcion 1:" + Fore.RESET + "Buscar agente")
+            print(Fore.BLUE + "Opcion 2:" + Fore.RESET + "Agregar agente")
+            print(Fore.BLUE + "Opcion 3:"  + Fore.RESET + "Modificar agente")
+            print(Fore.BLUE + "Opcion 4:"  + Fore.RESET + "Eliminar agente")
+            print(Fore.BLUE + "Opcion 5:"  + Fore.RESET + "Lista de agentes registrados")
+            print(Fore.BLUE + "Opcion 6:"  + Fore.RESET + "Salir de la aplicación")
+            
+
+def buscarAgente(lista):
+    '''Funcion BuscarAgente: Compara el string ingresado por el usuario en la variable "nombre" con el primer término (0) 
+    de la lista principal de agentes y muestra en pantalla los términos que sean iguales
+    
+    Parametros: Lista principal de agentes
+    Devuelve: Datos de el agente solicitado por el usuario.
+    Autora: Sofia Belen Perez
+    Colaboradores: Martin Córdoba, Martin Gajardo, Debora Tirado.'''
+
+    print("¿Con qué método desea buscar?")  #Propone al usuario dos opciones para buscar el agente deseado.
+    print(Fore.BLUE + "1 -" + Fore.RESET + " Para buscar por nombre.")
+    print(Fore.BLUE + "2 -" + Fore.RESET + " Para buscar por DNI.")
+    print(Fore.BLUE + "3 -" + Fore.RESET + " Para volver al menú.")
+    while True: #Agrego un try para que el usuario no inserte otro término que no sea un entero
+        try:
+            metodoDeBusqueda=int(input("Elección: " +Fore.BLUE))
+            print(Fore.RESET)
+            break
+        except ValueError:
+            input(Fore.RED + "Opción inválida. Inserte un número." + Fore.RESET)
+    limpiarPantalla()
+    if metodoDeBusqueda==3: #Devuelve al usuario al menú.
+        return lista
+    elif metodoDeBusqueda==1: #Por medio del condicional, el programa lleva a dos caminos para buscar el agente.
+        #Busqueda por nombre:
+        nombre=input("Ingrese el nombre que desea buscar: "+Fore.BLUE).title()
+        print(Fore.RESET)
+        limpiarPantalla()
+        agentesEncontrados=[agente for agente in lista if nombre in agente[0].title()]     #Crea una la lista de agentes tal que su nombre coincida con la variable "nombre" ingresada por el usuario.
+        if len(agentesEncontrados) == 0:   #Si el nombre ingresado no coincide con ningún agente registrado.
+            print(f"No se encontraron agentes con el nombre" + Fore.GREEN + f" {nombre}" + Fore.RESET + ".")
+        else:   #Imprime los agentes que coincidieron con la variable "nombre".
+            print(f"Se encontraron los siguientes agentes con el nombre" + Fore.GREEN + f" {nombre}" + Fore.RESET + ".")
+            contador=1     #Se agrega un contador para que enumere los agentes encontrados.
+            for agente in agentesEncontrados:
+                print(Fore.BLUE + f"{contador}." + Fore.RESET + F" {agente[0]}.")
+                contador=contador+1
+            while True:
+                try:
+                    seleccion=int(input("Seleccione el número del agente que busca: " + Fore.BLUE)) #Le pide al usuario que elija al agente deseado ingresando el número del índice que coincida con tal.
+                    print(Fore.RESET)
+                    break
+                except ValueError:
+                    input(Fore.RED + "Selección inválida. Inserte un número."+Fore.RESET)
+            if 1 <= seleccion <= len(agentesEncontrados):  #Rango de seleccion de número que incluye sólo los números impresos anteriormente.
+                agenteSeleccionado=agentesEncontrados[seleccion-1]
+                print("Ha seleccionado:") 
+                print(Fore.BLUE+f"{agenteSeleccionado[0]}"+Fore.RESET+f": Género"+Fore.BLUE+f" {agenteSeleccionado[1]}"+Fore.RESET+", DNI"+Fore.BLUE+ f" {agenteSeleccionado[2]}")
+                print(Fore.RESET)
+            else:
+                print(Fore.RED+"Selección inválida."+Fore.RESET)          
+    elif metodoDeBusqueda==2:
+        #Busqueda Por DNI:
+        while True:
+            try:
+                id=int(input("Ingrese el DNI de la persona que desea buscar sin guiones, puntos ni espacios: "+Fore.BLUE))
+                print(Fore.RESET)
+                break
+            except ValueError:
+                print()
+                input(Fore.RED+"DNI inválido. Debe ingresar los ocho dígitos, sin puntos ni guiones."+Fore.RESET)
+                limpiarPantalla()
+        limpiarPantalla()
+        if len(str(id))==8: #Se asegura de que el usuario escriba los 8 dígitos del DNI.
+            encontrado=[agente for agente in lista if id==agente[2] ]   #Filtra los elementos en la lista de agentes que no coinciden con el DNI ingresado por el usuario.
+            if len(encontrado)==0: #Si ningún agente coincide con el DNI ingresado.
+                       print("El DNI(" + Fore.GREEN + f"{id}" + Fore.RESET + ") ingresado no coincide con ningún agente registrado")
+            else:   #Si el DNI se encuentra en la lista de agentes.
+                for agente in encontrado:
+                    print("Se ha encontrado el siguiente agente:")
+                    print(f"Nombre:"+Fore.BLUE+f" {agente[0]}"+Fore.RESET+", Género:"+Fore.BLUE+f" {agente[1]}"+Fore.RESET+", DNI:"+Fore.BLUE+f" {agente[2]}")
+                    print(Fore.RESET) 
+        else:   #Si el dni ingresado contiene menos de ocho dígitos.
+            print(Fore.RED+"El número de documento ingresado es inválido."+Fore.RESET)
+    print()
+    while True: #Bucle que ofrece al usuario la opción para continuar en la función de buscarAgente
+        try:
+            continuar=int(input("¿Desea buscar otro agente?"+Fore.BLUE+"(1 para SÍ/ 2 para NO): "))
+            print(Fore.RESET)
+            break
+        except ValueError:
+            print()
+            input(Fore.RED+"Ingrese un número válido."+Fore.RESET)
+            limpiarPantalla()
+    limpiarPantalla()
+    while True:
+        if continuar==1:    #Si elije seguir en la función, llama de nuevo a buscarAgente seguido de un break para salir del bucle.
+            buscarAgente(lista)
+            limpiarPantalla()
+            break
+        elif continuar==2: #Si elije no continuar retorna al menú.
+            return lista
+        else: #Si el usuario elije un número que no está en las opciones.
+            input(Fore.RED+"Opción inválida. Intente de nuevo."+Fore.RESET)
+            limpiarPantalla()
+            while True:
+                try:
+                    continuar=int(input("¿Desea buscar otro agente?"+Fore.BLUE+"(1 para SÍ/ 2 para NO): "))
+                    print(Fore.RESET)
+                    break
+                except ValueError:
+                    input(Fore.RED+"Ingrese un número válido."+Fore.RESET)
+                    limpiarPantalla()    
+        limpiarPantalla()
+  
+def agregarAgente(lista):
+    '''
+    Funcion que se llama cuando el usuario ingresa la opcion 2, es para agregar un agente al programa
+    Parametros: La lista principal de agentes
+    Retorno: Retornara la lista actualizada de agentes
+    Autor: Martin Cordoba 
+    Colaboradores: Martin Gajardo, Débora Tirado, Sofia Perez
+    '''
+
+    #Se crea un ciclo while para ingresar el nombre, apellido y genero.
+    while True:
+        nombre = input("Ingrese el nombre del nuevo agente: " + Fore.BLUE).title()
+        
+        #Verificar si no se ingresa nada.
+        if not nombre:
+            print(Fore.RED + "Debe ingresar el nombre del agente." + Fore.RESET)
+            continue
+       
+        #Si el nombre ingresado contiene un espacio, se asume que ya tiene apellido, en caso de que no, se pide un apellido
+        if ' ' in nombre:
+            nombreCompleto = nombre
+
+        #En caso de que no contenga ningun espacio, se asume que el usuario agrego nada mas un nombre, por eso se pide un apellido.
+        else:
+            apellido = input(Fore.RESET + f"Ingrese el apellido de {nombre.title()}: " + Fore.BLUE)
+            if not apellido:
+                print(Fore.RED + "Debe ingresar tanto el apellido como el nombre." + Fore.RESET)
+                continue        
+            nombreCompleto = nombre + " " + apellido.title()
+       
+        #Se verifica el genero del agente y para determinar que no elija una opcion invalida, en caso de ser asi, sale un mensaje de error.
+        while True:
+            genero = input(Fore.RESET + "Ingrese el genero del agente" + Fore.BLUE + " (1-Para Masculino / 2-Para Femenino): " + Fore.BLUE) 
+            if genero == "1":
+                genero = "Masculino"
+                break   
+            elif genero == "2":
+                genero = "Femenino"
+                break    
+            else:
+                print(Fore.RED + "Opcion invalida. Solo puede contestar con 1 y 2.")
+                
+        #Se utiliza un bloque try-except para que el programa no se rompa en caso de que el usuario agregue puntos o letras.        
+        try:
+            dni = int(input(Fore.RESET + "Ingrese el DNI del agente (Sin utilizar puntos ni espacios): " + Fore.BLUE))
+        except ValueError:
+            print(Fore.RED + "Opción inválida. Debe ingresar el DNI sin puntos y tampoco debe ingresar letras.")
+            return lista
+    
+        #Se agrega el agente a la lista con append
+        agente = (nombreCompleto, genero, dni)
+        lista.append(agente)
+        return lista
+       
+
+def modificarAgente(lista):
+    nombre=input("Ingrese el nombre del agente a modificar: " + Fore.BLUE) 
+
+    #Se crea una lista agentesEncontrados que contiene todos los agentes cuyo nombre coincide con el nombre ingresado por el usuario. 
+    agentesEncontrados = [agente for agente in lista if nombre in agente[0].lower()]
+
+    #Si no se encuentra ningun agente se muestra un msj que lo dice y se vuelve al menu principal.
+    if len(agentesEncontrados) == 0:
+        print(Fore.RED + "Agente no encontrado en la lista.")
+        input(Fore.MAGENTA + "Presione" + Fore.BLUE +  " Enter" + Fore.MAGENTA + " para continuar: ")
+        return lista
+    
+    #En caso de que haya un solo agente registrado con el nombre seleccionado, se muestran sus datos y se pregunta que se quiere modificar.
+    elif len(agentesEncontrados) == 1:
+        agente = agentesEncontrados[0]
+        print(Fore.RESET + "Nombre:" + Fore.BLUE +  f" {agente[0]}" + Fore.RESET +  ", Género:" + Fore.BLUE + f" {agente[1]}" + Fore.RESET +  ", DNI:" + Fore.BLUE + f" {agente[2]}")
+        respuesta = input(Fore.RESET + "Ingrese el dato que desea modificar. DNI" + Fore.BLUE + " (1)" + Fore.RESET + " - GENERO" + Fore.BLUE + " (2): ")
+        if respuesta == '1':
+            dni=input(Fore.RESET + "Ingrese el nuevo DNI: " + Fore.BLUE)
+            while dni == "":
+                print(Fore.RED + "Es necesario ingresar el dato")
+                dni = input(Fore.RESET + "Ingrese el nuevo DNI: " + Fore.BLUE)
+            lista[lista.index(agente)] = (agente[0], agente[1], dni)
+            print(Fore.GREEN + "Se modifico correctamente el DNI!")
+            input(Fore.MAGENTA + "Presione" + Fore.BLUE +  " Enter" + Fore.MAGENTA + " para continuar: ")	
+            return
+        elif respuesta == '2':
+            genero=input(Fore.RESET + "Ingrese el nuevo género" + Fore.BLUE + "(Masculino/Femenino): ").lower()
+            while genero not in ['masculino', 'femenino']:
+                print(Fore.RED + "Es necesario ingresar el dato")
+                genero=input(Fore.RESET + "Ingrese el nuevo género" + Fore.BLUE + "(Masculino/Femenino): ").lower()
+            
+            #Esto busca el índice en la lista donde se encuentra almacenado el agente que se desea modificar, agente contiene la tupla del agente encontrado que se está modificando.
+            lista[lista.index(agente)] = (agente[0], genero.title(), agente[2])
+            print(Fore.GREEN + "Se modifico correctamente el genero!")
+            input(Fore.MAGENTA + "Presione" + Fore.BLUE +  " Enter" + Fore.MAGENTA + " para continuar: ")
+            return
+        else:
+            print(Fore.RED + "Opcion invalida.")
+    
+    #En caso de haber mas de un agente con el mismo nombre, se hace una lista enumerada de los agentes, el usuario debe seleccionar el que quiera modificar.
+    else:
+        print("Agentes encontrados:")
+
+        #Se crea un bucle for que itera sobre todos los agentes encontrados con el mismo nombre, de esta manera se enumeran los que hay.
+        for i in range(len(agentesEncontrados)):
+            print(Fore.BLUE + f"{i + 1}.{Fore.RESET}{agentesEncontrados[i][0]}")
+               
+        seleccion = input(Fore.RESET + "Seleccione el número del agente que desea modificar: " + Fore.BLUE)
+        limpiarPantalla()
+        try:
+            seleccion = int(seleccion)
+
+            #Se condiciona la variable seleccion para que no salga de los limites validos.
+            if 1 <= seleccion <= len(agentesEncontrados):
+
+                #Se agrega el -1 para que seleccione el agente correcto, ya que los indices se empiezan desde 0 pero en el bucle se empieza desde 1.
+                agente = agentesEncontrados[seleccion - 1]
+                print("Ha seleccionado a:")
+                print(Fore.RESET + f"Nombre: {Fore.BLUE}{lista[i][0]}{Fore.RESET}, Género: {Fore.BLUE}{lista[i][1]}{Fore.RESET}, DNI: {Fore.BLUE}{lista[i][2]}")       
+                respuesta = input(Fore.RESET + "Ingrese el dato que desea modificar. DNI" + Fore.BLUE + " (1)" + Fore.RESET + " - GENERO" + Fore.BLUE + " (2): ")
+                if respuesta == '1':
+                    dni=input(Fore.RESET + "Ingrese el nuevo DNI: " + Fore.BLUE)
+                    while dni == "":
+                        print(Fore.RED + "Es necesario ingresar el dato")
+                        dni = input(Fore.RESET + "Ingrese el nuevo DNI: " + Fore.BLUE)
+                    lista[lista.index(agente)] = (agente[0], agente[1], dni)
+                    print(Fore.GREEN + "Se modifico correctamente el DNI!")
+                    input(Fore.MAGENTA + "Presione" + Fore.BLUE +  " Enter" + Fore.MAGENTA + " para continuar: ")	
+                    return
+                elif respuesta == '2':
+                    genero=input(Fore.RESET + "Ingrese el nuevo género" + Fore.BLUE + "(Masculino/Femenino): ").lower()
+                    while genero not in ['masculino', 'femenino']:
+                        print(Fore.RED + "Es necesario ingresar el dato")
+                        genero=input(Fore.RESET + "Ingrese el nuevo género" + Fore.BLUE + "(Masculino/Femenino): ").lower()
+                    lista[lista.index(agente)] = (agente[0], genero.title(), agente[2])
+                    print(Fore.GREEN + "Se modifico correctamente el genero!")
+                    input(Fore.MAGENTA + "Presione" + Fore.BLUE +  " Enter" + Fore.MAGENTA + " para continuar: ")
+                else:
+                    print("Selección inválida.")
+            else:
+                print("Selección fuera de rango.")
+        except ValueError:
+            print("Debe ingresar un número válido.")
+    
+    #Al finalizar la función, se le pide al usuario presionar Enter para mostrar la lista modificada.
+    input(Fore.MAGENTA + "Presione" + Fore.BLUE + " Enter" + Fore.MAGENTA + " para continuar: ")
+    return lista
+
+def eliminarAgente(lista):
+    '''
+    Funcion que se llama cuando el usuario ingresa la opcion 4, es para eliminar un agente del programa.
+    Parametros: La lista principal de agentes.
+    Retorno: Retornara la lista actualizada de agentes despues de haber eliminado o no a algun agente.
+    Autor: Martin Cordoba.
+    Colaboradores: Martin Gajardo, Débora Tirado, Sofia Perez.
+    '''
+    
+    #Solicita al usuario ingresar un nombre de algun agente que quiera eliminar, se agrega un lower() para que se escriba el nombre con mayusculas o minusculas, sea valido.
+    nombre = input("Ingrese el nombre del agente que quiere eliminar: " + Fore.BLUE).lower()
+
+    #Se crea una variable, y se recorre con for para ver si hay algun agente con el nombre ingresado.
+    agentesEncontrados = [agente for agente in lista if nombre in agente[0].lower()]
+    
+    #Si no hay ninguno, se ingresa un msj que lo aclara, con len se ve la longitud de la lista.
+    if len(agentesEncontrados) == 0:
+        print(Fore.RED + f"No se han encontrado agentes con el nombre {Fore.BLUE} {nombre.title()}.")
+        return lista
+    else:
+        #En caso de encontrar un nombre que este en la lista, se confirma si de verdad lo quiere eliminar, en caso de escribir "S", se elimina de la lista con "remove".
+        #Si elige "N", se cancela la operacion y se vuelve al menu principal. En caso de no ingresar "S" o "N", se muestra un mensaje de error con else.
+        if len(agentesEncontrados) == 1:
+            confirmacion = input(Fore.CYAN + f"¿Esta seguro de que quiere eliminar a {Fore.BLUE} {agentesEncontrados[0]} {Fore.RESET} ? Responda con" + Fore.BLUE + " S/N" + Fore.BLUE).lower()
+            if confirmacion == "s":
+                lista.remove(agentesEncontrados[0])
+                print(Fore.BLUE + f"{agentesEncontrados[0]} {Fore.GREEN} ha sido eliminado con éxito!")
+                return lista
+            elif confirmacion == "n":
+                print(Fore.RED + f"Operacion cancelada! El agente {Fore.BLUE} {agentesEncontrados[0]} {Fore.RED} no sera eliminado")
+                return lista
+            else:
+                print(Fore.RED + "Opción no válida")
+                
+                #En caso de que se encuentre mas de un nombre igual, se hace una busqueda con for, se crea un contador para ver cuantos hay y indica al usuario que
+                #ingrese el numero del agente que quiere eliminar.
+        else:
+            print(Fore.RESET + f"Se encontraron múltiples agentes con el nombre{Fore.BLUE} {nombre.title()}:")
+            contador = 1
+            for agente in agentesEncontrados:
+                print(Fore.RESET + f"{contador}.{Fore.BLUE}{agente[0]}")
+                contador = contador + 1
+            seleccion = int(input(Fore.RESET + "Seleccione el número del agente que desea eliminar: " + Fore.BLUE))
+            
+            #Se crea un rango para que la seleccion de agentes encontrados con el mismo nombre sea valida. El "-1" se agrega porque la lista empieza en 0
+            #y de esta manera se selecciona el que el usuario quiere. Despues se vuelve a hacer un mensaje de confirmacion.
+            if 1 <= seleccion <= len(agentesEncontrados):
+                confirmacion = input(Fore.RESET + f"¿Esta seguro de que quiere eliminar a {Fore.BLUE} {agentesEncontrados[seleccion - 1]} {Fore.RESET} ? Responda con" + Fore.BLUE + " S/N" + Fore.BLUE).lower()
+                if confirmacion == "s":
+                    lista.remove(agentesEncontrados[seleccion - 1])
+                    print(Fore.BLUE + f"{agentesEncontrados[seleccion - 1]} {Fore.GREEN} ha sido eliminado con éxito!")
+                    return lista
+                elif confirmacion == "n":
+                    print(Fore.RED + f"Operacion cancelada! El agente {Fore.BLUE} {agentesEncontrados[seleccion - 1]} {Fore.RED} no sera eliminado")
+                    return lista
+                else:
+                    print(Fore.RED + "Opción no válida")
+            else:
+                print(Fore.RED + "Seleccion inválida.")
+    return lista
+
+def Listar(lista):
+    '''
+    Funcion que muestra la lista completa de agentes, actualizada y en orden alfabetico.
+    Parametros: Se utiliza una lista como parametro.
+    Retorno: Retornara la lista ordenada alfabeticamente, empezando con el apellido y seguido del nombre.
+    Autor: Martin Cordoba.
+    Colaboradores: Martin Gajardo, Sofia Perez, Devora Tirado.
+    '''
+
+    #Se crea la variable listaOrdenada y se utiliza sorted para ordenar alfabeticamente los apellidos.
+    #key = lambda es una funcion anonima, que toma un argumento (en este caso agente).
+    #split lo que hace es dividir la cadena en partes utilizando el espacio () como argumento y se selecciona el [1] ya que este seria el apellido.
+    #Esto se hace para que el ordenamiento se base en el apellido de cada agente.
+
+    if not lista:
+        print(Fore.RED + "La lista de agentes registrados está vacia!")
+        return []
+    
+    listaOrdenada = sorted(lista, key=lambda agente: agente[0].split()[1])
+    for agente in listaOrdenada:
+
+        # Esta línea divide el nombre completo del agente en nombre y apellido.
+        nombre, apellido = agente[0].split()
+        print(Fore.BLUE + f"{apellido}, {nombre}")
+    return listaOrdenada
+    
+def salirPrograma():
+    '''
+    Función para salir del programa, en la que se muestra un mensaje avisando al usuario
+    Parametros: No tiene.
+    Retorno: En caso de que el usuario quiera salir del programa, no retorna nada y simplmente con un break sale de la app.
+            En caso de querer salir de la app, retorna el menu de inicio.
+    '''
+    while True:
+        confirmacion = input(Fore.RESET + "¿Esta seguro de que quiere salir de la aplicación?" + Fore.BLUE + " (S / N): " + Fore.BLUE).lower()
+        if confirmacion == "s":
+            print(Fore.YELLOW + "*" * 60)
+            print(Fore.RED + "Saliendo del programa...".center(60))
+            print(Fore.YELLOW + "*" * 60)
+            return confirmacion
+        elif confirmacion == "n":
+            input("Ha elegido no salir del programa, presione Enter para continuar...")
+            return confirmacion
+        else:
+            input(Fore.RED + "Opción inválida. Por favor, vuelva a intentarlo presionando" + Fore.BLUE +  " Enter. " + Fore.BLUE)
+            limpiarPantalla()
+    
+            
+
+def mostrarNomApell(lista):
+    '''
+    Es una funcion que se creo especificamente para que cuando el usuario agrega o elimina algun agente, solo se vea el nombre y apellido,
+    sin necesidad de ver el DNI y el genero, que eso lo vamos a ver solamente al buscar algun agente o querer modificarlo.
+    Parametros: La lista principal de agentes.
+    Retorno: Retorna la lista principal de agentes.
+    '''
+    for agente in lista:
+        nombre, apellido = agente[0].split()
+        print(Fore.RESET + f"-{Fore.BLUE}{nombre} {apellido}")
+    return lista
+
+def mostrarLista(lista):
+    '''
+    Es una funcion que se creo para mostrar la lista completa, con nombre, apellido, genero y DNI.
+    Parametros: La lista principal de agentes.
+    Retorno: Retorna la lista principal de agentes.
+    '''
+
+    if not lista:
+        print(Fore.RED + "No hay agentes registrados.")
+        return lista
+    for agente in lista:
+        if len(agente) >= 3:
+            nombre_completo = agente[0].title()
+            genero = agente[1] 
+            dni = agente[2] 
+            print(Fore.RESET + "Nombre:" + Fore.BLUE + f" {nombre_completo.title()}" + Fore.RESET + ", Género:" + Fore.BLUE + f" {genero}" + Fore.RESET + ", DNI:" + Fore.BLUE + f" {dni}")
+        else:
+            print(Fore.RED + f"Error: El agente {agente} no tiene la estructura completa.")
+    return lista
+
+
+#PROGRAMA PRINCIPAL
+
+mostrarMenuInicio()
+
+lista = []
+
+op = 1
+while op != 6:
+    op = menuInicio()
+    if op == 1:
+        limpiarPantalla()
+        buscarAgente(lista)
+        input(Fore.MAGENTA + "Presione" + Fore.BLUE +  " Enter" + Fore.MAGENTA + " para volver al menú principal...")
+        limpiarPantalla()
+        op = menuInicio()
+    elif op == 2:
+        limpiarPantalla()
+        nuevaLista = agregarAgente(lista)
+        if nuevaLista:
+            print(f"{nuevaLista[-1]}" + Fore.GREEN + " ha sido añadido con exito!")
+            input(Fore.MAGENTA + "Presione" + Fore.BLUE +  " Enter" + Fore.MAGENTA + " para continuar: ")
+            lista = nuevaLista
+        else:
+            print(Fore.RED + "No se ha agregado ningun agente.") 
+            input(Fore.MAGENTA + "Presione" + Fore.BLUE +  " Enter" + Fore.MAGENTA + " para continuar: ")
+        limpiarPantalla()
+        print (Fore.GREEN + "Lista de agentes actualizada:")
+        mostrarNomApell(lista)
+        input(Fore.MAGENTA + "Presione" + Fore.BLUE +  " Enter" + Fore.MAGENTA + " para volver al menú principal...")
+        limpiarPantalla()
+        op = menuInicio()
+    elif op == 3:
+        limpiarPantalla()
+        modificarAgente(lista)
+        limpiarPantalla()
+        print(Fore.YELLOW + "*" * 45)
+        print(Fore.GREEN + "Lista de agentes actualizada:")
+        mostrarLista(lista)
+        input(Fore.MAGENTA + "Presione" + Fore.BLUE +  " Enter" + Fore.MAGENTA + " para volver al menú principal...")
+        limpiarPantalla()
+        op = menuInicio()
+    elif op == 4:
+        limpiarPantalla()
+        lista = eliminarAgente(lista)
+        input(Fore.MAGENTA + "Presione" + Fore.BLUE +  " Enter" + Fore.MAGENTA + " para continuar...")
+        limpiarPantalla()
+        print(Fore.YELLOW + "*" * 45)
+        print(Fore.GREEN + "Lista de agentes actualizada:")
+        mostrarNomApell(lista)
+        input(Fore.MAGENTA + "Presione" + Fore.BLUE +  " Enter" + Fore.MAGENTA + " para volver al menú principal...")
+        limpiarPantalla()
+        op = menuInicio()
+    elif op == 5:
+        limpiarPantalla()
+        print(Fore.YELLOW + "*" * 60)
+        Listar(lista)
+        print(Fore.YELLOW + "*" * 60)
+        input(Fore.MAGENTA + "Presione" + Fore.BLUE +  " Enter" + Fore.MAGENTA + " para volver al menú principal...")
+        limpiarPantalla()
+        op = menuInicio()
+    elif op == 6:
+        limpiarPantalla()
+        rt = salirPrograma() 
+        if rt == "s":
+            op = 6
+        else:
+            op = menuInicio()
+    else:
+        print(Fore.RED + "Error. Ha seleccionado una opcion que no esta disponible.")
+        input(Fore.MAGENTA + "Presione" + Fore.BLUE +  " Enter" + Fore.MAGENTA + " para volver al menú principal...")
+        limpiarPantalla()
+        op = menuInicio()
